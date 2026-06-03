@@ -21,29 +21,14 @@
     
     <!-- Custom CSS -->
 
-<style>
-        :root {
-            --primary: #2C3E50;
-            --kopken: #a0522d;
-            --fore: #2e8b57;
-            --bg-glass: rgba(255, 255, 255, 0.85);
-            --border-glass: rgba(255, 255, 255, 0.4);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            --radius: 20px;
-        }
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
+    <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Outfit', sans-serif;
-        }
-
-        body {
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            background-color: #f0f2f5;
         }
 
         #map {
@@ -56,13 +41,13 @@
         /* Glassmorphism Sidebar */
         #sidebar {
             position: absolute;
-            top: 20px;
-            left: -400px; /* start off-screen for animation */
+            top: 90px; /* Shifted for navbar */
+            left: -400px;
             width: 360px;
-            height: calc(100vh - 40px);
-            background: var(--bg-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            height: calc(100vh - 110px);
+            background: var(--panel-bg-gradient);
+            backdrop-filter: blur(18px) saturate(1.2);
+            -webkit-backdrop-filter: blur(18px) saturate(1.2);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
@@ -79,8 +64,8 @@
 
         .sidebar-header {
             padding: 24px;
-            background: linear-gradient(135deg, var(--bg-glass) 0%, rgba(255,255,255,0.95) 100%);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, var(--sidebar-header-bg1) 0%, var(--sidebar-header-bg2) 100%);
+            border-bottom: 1px solid var(--border-glass);
         }
 
         .sidebar-header h1 {
@@ -93,8 +78,22 @@
 
         .sidebar-header p {
             font-size: 14px;
-            color: #666;
+            color: var(--text-muted);
             font-weight: 300;
+        }
+
+        .btn-about {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            color: var(--primary);
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-about:hover {
+            transform: scale(1.15) rotate(5deg);
+            color: #d35400;
         }
 
         /* Tabs */
@@ -102,7 +101,7 @@
             display: flex;
             padding: 0 16px;
             margin-top: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .tab-btn {
@@ -113,24 +112,45 @@
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
-            color: #888;
-            border-bottom: 3px solid transparent;
+            color: var(--text-muted);
+            position: relative;
             transition: all 0.3s ease;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .tab-btn.active::after {
+            width: 100%;
         }
 
         .tab-btn.active.semua-tab {
             color: var(--primary);
-            border-bottom-color: var(--primary);
+        }
+        .tab-btn.active.semua-tab::after {
+            background: var(--primary);
         }
 
         .tab-btn.active.kopken-tab {
             color: var(--kopken);
-            border-bottom-color: var(--kopken);
+        }
+        .tab-btn.active.kopken-tab::after {
+            background: var(--kopken);
         }
         
         .tab-btn.active.fore-tab {
             color: var(--fore);
-            border-bottom-color: var(--fore);
+        }
+        .tab-btn.active.fore-tab::after {
+            background: var(--fore);
         }
 
         .tab-btn:hover {
@@ -157,20 +177,42 @@
         }
 
         .coffee-item {
-            background: #fff;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: var(--item-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: all 0.3s ease;
-            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             border-left: 4px solid transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInUp 0.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .item-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .item-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .coffee-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            background: var(--item-hover);
         }
 
         .coffee-item.kopken-item:hover {
@@ -191,16 +233,17 @@
         .item-type {
             font-size: 12px;
             display: inline-block;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 20px;
-            background: #f0f0f0;
-            color: #555;
+            background: var(--pill-bg);
+            color: var(--pill-text);
             margin-bottom: 8px;
+            border: 1px solid var(--border-glass);
         }
 
         .item-address {
             font-size: 13px;
-            color: #777;
+            color: var(--text-muted);
             display: -webkit-box;
             -webkit-line-clamp: 2px;
             -webkit-box-orient: vertical;
@@ -213,19 +256,29 @@
             border-radius: 16px;
             padding: 0;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            animation: popupFadeIn 0.4s ease-out forwards;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            background: var(--popup-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            color: var(--primary);
+            animation: popupFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .leaflet-popup-tip {
+            background: var(--popup-bg);
         }
 
         .leaflet-popup-content {
             margin: 0;
-            width: 260px !important;
+            width: 280px !important;
             font-family: 'Outfit', sans-serif;
+            color: var(--primary);
         }
 
         .popup-img-wrapper {
             width: 100%;
-            height: 140px;
+            height: 150px;
             overflow: hidden;
             position: relative;
         }
@@ -246,15 +299,15 @@
         }
 
         .popup-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .popup-address {
             font-size: 13px;
-            color: #666;
+            color: var(--text-muted);
             margin-bottom: 12px;
             line-height: 1.4;
         }
@@ -270,11 +323,12 @@
             align-items: center;
             gap: 6px;
             font-size: 11px;
-            background: #f5f5f5;
+            background: var(--pill-bg);
             padding: 6px 8px;
             border-radius: 8px;
-            color: #444;
+            color: var(--pill-text);
             font-weight: 500;
+            border: 1px solid var(--border-glass);
         }
 
         .info-pill i.yes { color: var(--fore); }
@@ -287,24 +341,24 @@
         /* ================= SEARCH BOX ================= */
         #search-box {
             position: absolute;
-            top: 20px;
+            top: 90px; /* Shifted for navbar */
             left: 76px;
             z-index: 1200;
             width: 300px;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--search-bg);
             backdrop-filter: blur(10px);
             border-radius: 50px;
             padding: 10px 16px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 1px solid var(--border-glass);
             transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         #search-box.shifted {
-            left: 396px;
+            left: 448px; /* Shifted to be right next to the toggle-sidebar */
         }
 
         #search-box:hover {
@@ -332,12 +386,12 @@
             width: 100%;
             font-size: 14px;
             background: transparent;
-            color: #333;
+            color: var(--primary);
             font-family: 'Outfit', sans-serif;
         }
 
         #search-input::placeholder {
-            color: #aaa;
+            color: var(--text-muted);
         }
 
         /* Search Results Dropdown */
@@ -348,29 +402,29 @@
             width: 100%;
             max-height: 320px;
             overflow-y: auto;
-            background: rgba(255,255,255,0.97);
+            background: var(--popup-bg);
             backdrop-filter: blur(12px);
             border-radius: 16px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-glass);
             display: none;
             z-index: 1201;
         }
 
         #search-results::-webkit-scrollbar { width: 5px; }
-        #search-results::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        #search-results::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.2); border-radius: 10px; }
 
         .search-result-item {
             padding: 12px 16px;
             cursor: pointer;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid var(--border-glass);
             transition: background 0.2s;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         .search-result-item:last-child { border-bottom: none; }
-        .search-result-item:hover { background: #f0f4ff; }
+        .search-result-item:hover { background: var(--item-hover); }
 
         .search-result-item .sr-icon {
             width: 36px; height: 36px;
@@ -382,13 +436,13 @@
         .search-result-item .sr-icon.fore { background: var(--fore); }
 
         .search-result-item .sr-info { flex: 1; }
-        .search-result-item .sr-name { font-weight: 600; font-size: 14px; color: #333; }
-        .search-result-item .sr-addr { font-size: 12px; color: #888; margin-top: 2px; }
+        .search-result-item .sr-name { font-weight: 600; font-size: 14px; color: var(--primary); }
+        .search-result-item .sr-addr { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
         .search-no-result {
             padding: 20px 16px;
             text-align: center;
-            color: #999;
+            color: var(--text-muted);
             font-size: 14px;
         }
 
@@ -416,7 +470,11 @@
             align-items: center;
             justify-content: center;
 
-            transition: all 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        #btn-nearest.shifted {
+            left: 400px;
         }
 
         #btn-nearest:hover {
@@ -426,18 +484,19 @@
         /* ================= SIDEBAR BUTTON ================= */
         #toggle-sidebar {
             position: absolute;
-            top: 24px;
+            top: 94px; /* Shifted for navbar */
             left: 20px;
             z-index: 1300;
-            background: white;
-            border: none;
+            background: var(--search-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             cursor: pointer;
             font-size: 18px;
-            color: #2C3E50;
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -457,14 +516,13 @@
         .leaflet-top.leaflet-left {
             left: auto !important;
             right: 20px;
-            top: 20px;
+            top: 90px; /* Shifted for navbar */
         }
 
         /* ================= SEARCH FOCUS EFFECT ================= */
         #search-box:focus-within {
-            border: 1px solid #2C3E50;
-            box-shadow: 0 10px 30px rgba(44,62,80,0.15);
-            background: rgba(255,255,255,1);
+            border-color: var(--kopken);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         /* ================= RESPONSIVE ================= */
@@ -475,7 +533,7 @@
                 padding: 8px 12px;
             }
             #search-box.shifted {
-                left: 76px;
+                left: 76px; /* Hide or keep same on mobile */
             }
             #toggle-sidebar.shifted {
                 left: 20px;
@@ -485,6 +543,9 @@
                 height: 50px;
                 font-size: 18px;
             }
+            #btn-nearest.shifted {
+                left: 40px; /* Don't shift on mobile */
+            }
         }
                 /* Animations */
                 @keyframes popupFadeIn {
@@ -492,16 +553,21 @@
                     to { opacity: 1; transform: translateY(0) scale(1); }
                 }
 
+                @keyframes slideInUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
                 /* Right Detail Panel */
                 #right-panel {
                     position: absolute;
-                    top: 20px;
+                    top: 90px; /* Shifted for navbar */
                     right: -400px; /* start off-screen right */
                     width: 360px;
-                    height: calc(100vh - 40px);
-                    background: var(--bg-glass);
-                    backdrop-filter: blur(12px);
-                    -webkit-backdrop-filter: blur(12px);
+                    height: calc(100vh - 110px);
+                    background: var(--panel-bg-gradient);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
                     border: 1px solid var(--border-glass);
                     border-radius: var(--radius);
                     box-shadow: var(--shadow);
@@ -566,17 +632,17 @@
                 }
 
                 .attr-box {
-                    background: #fff;
+                    background: var(--attr-box-bg);
                     border-radius: 12px;
                     padding: 16px;
                     margin-bottom: 12px;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-                    border: 1px solid rgba(0,0,0,0.05);
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    border: 1px solid var(--border-glass);
                 }
 
                 .attr-box h4 {
                     font-size: 12px;
-                    color: #888;
+                    color: var(--text-muted);
                     margin-bottom: 6px;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
@@ -585,7 +651,7 @@
 
                 .attr-box p {
                     font-size: 14px;
-                    color: #333;
+                    color: var(--primary);
                     font-weight: 500;
                     line-height: 1.5;
                 }
@@ -596,40 +662,129 @@
                     gap: 8px;
                     font-size: 18px;
                     font-weight: 700;
-                    color: #333;
+                    color: var(--primary);
                 }
                 .rating-box i {
                     color: #f1c40f;
                 }
 
                 .btn-detail {
-                    margin-top: 12px;
+                    margin-top: 14px;
                     width: 100%;
-                    padding: 8px;
-                    background: var(--primary);
+                    padding: 10px 16px;
+                    background: var(--btn-accent);
                     color: white;
                     border: none;
-                    border-radius: 8px;
+                    border-radius: 10px;
                     cursor: pointer;
                     font-weight: 600;
+                    font-size: 14px;
                     font-family: 'Outfit', sans-serif;
-                    transition: background 0.3s;
+                    transition: all 0.3s ease;
+                    letter-spacing: 0.3px;
                 }
                 .btn-detail:hover {
-                    background: #1a252f;
+                    background: var(--btn-accent-hover);
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
                 }
 
                 /* Map controls adjustment */
                 .leaflet-top.leaflet-left {
                     left: auto;
                     right: 20px;
-                    top: 20px;
+                    top: 90px; /* Shifted for navbar */
                 }
 
+        /* --- NAVBAR --- */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 9999;
+            transition: background 0.3s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--lilac, #b8a2d0); /* Lilac accent */
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+
+        @media (max-width: 900px) {
+            .top-nav { padding: 0 20px; }
+            .nav-brand { font-size: 18px; }
+            .nav-links { gap: 15px; }
+        }
+
     </style>
+    <script>
+        // Check theme on load to prevent flash
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
 </head>
 
-<body>
+<body style="height: 100vh; width: 100vw; overflow: hidden;">
+
+<!-- NAVBAR -->
+<nav class="top-nav">
+    <div class="nav-brand">Pemetaan Coffee</div>
+    <div class="nav-links">
+        <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
+        <a href="{{ route('map') }}" class="{{ request()->routeIs('map') ? 'active' : '' }}">Map</a>
+        <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+        <button id="btn-theme" class="btn-theme" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+    </div>
+</nav>
 
 <button id="toggle-sidebar"><i class="fa-solid fa-bars"></i></button>
 
@@ -645,7 +800,7 @@
 </button>
 
 <div id="sidebar" class="glass-panel">
-    <div class="sidebar-header">
+    <div class="sidebar-header" style="position: relative;">
         <h1>Pemetaan Coffee</h1>
         <p>Jelajahi Kopi Kenangan & Fore Coffee di wilayah Medan</p>
     </div>
@@ -680,12 +835,53 @@
     // Move zoom control to bottom right for better aesthetics
     map.zoomControl.setPosition('bottomright');
 
-    // Add bright map style
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    // Add map style and store reference
+    let isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+    let initialTileUrl = isDarkTheme 
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+        
+    if (isDarkTheme) {
+        document.querySelector('#btn-theme i').classList.replace('fa-moon', 'fa-sun');
+    }
+
+    var currentTileLayer = L.tileLayer(initialTileUrl, {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 20
     }).addTo(map);
+
+    // Theme Toggle Logic
+    document.getElementById('btn-theme').addEventListener('click', function() {
+        let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        let icon = this.querySelector('i');
+        
+        map.removeLayer(currentTileLayer);
+        
+        if (isDark) {
+            // Switch to Light
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+            currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+        } else {
+            // Switch to Dark
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+            currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+        }
+    });
 
     // Data dari Laravel
     var kopikenangan = @json($kopikenangan);
@@ -702,6 +898,7 @@
         let isOpen = document.getElementById('sidebar').classList.contains('show');
         document.getElementById('toggle-sidebar').classList.toggle('shifted', isOpen);
         document.getElementById('search-box').classList.toggle('shifted', isOpen);
+        document.getElementById('btn-nearest').classList.toggle('shifted', isOpen);
     }
 
     // Show sidebar with animation on load
@@ -780,7 +977,7 @@
 
                     let jarakKm = (item.jarak / 1000).toFixed(2);
                     let itemHTML = `
-                        <div class="coffee-item ${item.brand}-item" onclick="flyToMarker(${index})">
+                        <div class="coffee-item ${item.brand}-item" onclick="flyToMarker(${index})" style="animation-delay: ${index * 0.05}s">
                             <div class="item-name">${item.nama}</div>
                             <div class="item-type">${item.tipe_outlet}</div>
                             <div class="item-address">${item.alamat}</div>
@@ -857,7 +1054,7 @@
                     <div class="info-pill">
                         ${getStatusIcon(data.delivery)} Delivery
                     </div>
-                    <div class="info-pill" style="justify-content:center; background: ${brand === 'kopken' ? '#fdf1eb' : '#edf7ee'}; color: ${brand === 'kopken' ? 'var(--kopken)' : 'var(--fore)'}; font-weight:700;">
+                    <div class="info-pill" style="justify-content:center; background: rgba(255,255,255,0.1); color: ${brand === 'kopken' ? 'var(--kopken)' : 'var(--fore)'}; font-weight:700;">
                         ${data.tipe_outlet}
                     </div>
                 </div>
@@ -892,11 +1089,17 @@
             markers.push(marker);
 
             // Populate Sidebar List
+            let imgPath = data.brand === 'kopken' ? `/images/kopken/${data.gambar}` : `/images/fore/${data.gambar}`;
+            let fallbackImg = 'https://via.placeholder.com/100x100.png?text=Coffee';
+            
             var itemHTML = `
-                <div class="coffee-item ${data.brand}-item" onclick="flyToMarker(${index})">
-                    <div class="item-name">${data.nama}</div>
-                    <div class="item-type">${data.tipe_outlet}</div>
-                    <div class="item-address">${data.alamat}</div>
+                <div class="coffee-item ${data.brand}-item" onclick="flyToMarker(${index})" style="animation-delay: ${index * 0.05}s">
+                    <img src="${imgPath}" onerror="this.src='${fallbackImg}'" class="item-img" alt="${data.nama}">
+                    <div class="item-info">
+                        <div class="item-name">${data.nama}</div>
+                        <div class="item-type">${data.tipe_outlet}</div>
+                        <div class="item-address">${data.alamat}</div>
+                    </div>
                 </div>
             `;
             listContainer.insertAdjacentHTML('beforeend', itemHTML);
@@ -965,7 +1168,7 @@
         let fallbackImg = 'https://via.placeholder.com/400x200.png?text=Coffee+Shop';
         
         let badgeColor = brand === 'kopken' ? 'var(--kopken)' : 'var(--fore)';
-        let badgeBg = brand === 'kopken' ? '#fdf1eb' : '#edf7ee';
+        let badgeBg = 'rgba(255,255,255,0.1)';
         
         // Cek rating (jika field belum ada di DB, akan bernilai undefined/null)
         let ratingVal = data.rating ? parseFloat(data.rating).toFixed(1) : 'Belum ada rating';

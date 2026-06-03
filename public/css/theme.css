@@ -1,0 +1,142 @@
+/* ======================================================
+   PEMETAAN COFFEE — Global Design System
+   Palette: Beige · Lilac · Earth Brown
+   ====================================================== */
+
+/* LIGHT MODE (DEFAULT) — Cream, Lilac, Coklat Tanah */
+:root {
+    /* Brand */
+    --kopken: #8b6f47;
+    --fore: #7b6b8a;
+
+    /* Typography */
+    --primary: #3d2e1f;
+    --text-muted: #7a6b5d;
+
+    /* Backgrounds */
+    --body-bg: #fff8e7;
+    --body-gradient: linear-gradient(135deg, #fff8e7 0%, #f2eaf7 50%, #f7ecd9 100%);
+
+    /* Glassmorphism */
+    --bg-glass: rgba(255, 255, 250, 0.72);
+    --border-glass: rgba(168, 140, 120, 0.15);
+    --shadow: 0 8px 32px rgba(80, 60, 40, 0.08);
+    --radius: 20px;
+
+    /* Components */
+    --nav-bg: rgba(255, 255, 250, 0.8);
+    --item-bg: rgba(255, 255, 245, 0.55);
+    --item-hover: rgba(255, 255, 250, 0.92);
+    --pill-bg: rgba(139, 111, 71, 0.08);
+    --pill-text: #5c4a35;
+
+    /* Map */
+    --search-bg: rgba(255, 255, 250, 0.92);
+    --popup-bg: rgba(255, 255, 250, 0.96);
+    --attr-box-bg: rgba(255, 248, 231, 0.7);
+    --sidebar-header-bg1: rgba(242, 234, 247, 0.3);
+    --sidebar-header-bg2: rgba(247, 236, 217, 0.2);
+    --detail-bg: rgba(255, 255, 250, 0.88);
+    --panel-bg-gradient: linear-gradient(135deg, rgba(255, 255, 250, 0.85) 0%, rgba(242, 234, 247, 0.75) 50%, rgba(247, 236, 217, 0.85) 100%);
+
+    /* Buttons — Earth brown gradient */
+    --btn-accent: linear-gradient(135deg, #8b6f47, #a68b5b);
+    --btn-accent-hover: linear-gradient(135deg, #6b5535, #8b6f47);
+
+    /* Special accents */
+    --lilac: #b8a2d0;
+    --lilac-soft: rgba(184, 162, 208, 0.15);
+    --earth: #8b6f47;
+    --cream: #fff8e7;
+}
+
+/* DARK MODE — Hitam, Lilac, Coklat Tanah */
+:root[data-theme="dark"] {
+    --kopken: #c4a882;
+    --fore: #c0aed4;
+
+    --primary: #f0ebe3;
+    --text-muted: rgba(240, 235, 227, 0.55);
+
+    --body-bg: #0f0d12;
+    --body-gradient: linear-gradient(135deg, #0f0d12 0%, #1a1525 50%, #1c1610 100%);
+
+    --bg-glass: rgba(20, 16, 28, 0.65);
+    --border-glass: rgba(184, 162, 208, 0.12);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+    --nav-bg: rgba(15, 13, 18, 0.82);
+    --item-bg: rgba(184, 162, 208, 0.06);
+    --item-hover: rgba(184, 162, 208, 0.12);
+    --pill-bg: rgba(196, 168, 130, 0.1);
+    --pill-text: rgba(240, 235, 227, 0.8);
+
+    --search-bg: rgba(15, 13, 18, 0.88);
+    --popup-bg: rgba(20, 16, 28, 0.94);
+    --attr-box-bg: rgba(184, 162, 208, 0.06);
+    --sidebar-header-bg1: rgba(184, 162, 208, 0.06);
+    --sidebar-header-bg2: transparent;
+    --detail-bg: rgba(20, 16, 28, 0.88);
+    --panel-bg-gradient: linear-gradient(135deg, rgba(20, 16, 28, 0.85) 0%, rgba(35, 25, 45, 0.75) 50%, rgba(25, 20, 15, 0.85) 100%);
+
+    --btn-accent: linear-gradient(135deg, #b8a2d0, #c4a882);
+    --btn-accent-hover: linear-gradient(135deg, #9b89b3, #a68b5b);
+
+    --lilac: #b8a2d0;
+    --lilac-soft: rgba(184, 162, 208, 0.1);
+    --earth: #c4a882;
+    --cream: #f0ebe3;
+}
+
+/* ============ BASE ============ */
+body {
+    background-color: var(--body-bg);
+    background-image: var(--body-gradient);
+    color: var(--primary);
+    transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* ============ GLASS PANEL ============ */
+.glass-panel {
+    background: var(--bg-glass) !important;
+    backdrop-filter: blur(18px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.2) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
+    color: var(--primary);
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+}
+
+/* ============ NAVBAR LINKS ============ */
+.nav-links a {
+    color: var(--text-muted);
+}
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary);
+}
+
+/* ============ THEME TOGGLE ============ */
+.btn-theme {
+    background: var(--lilac-soft);
+    border: 1px solid var(--border-glass);
+    color: var(--lilac);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+}
+.btn-theme:hover {
+    transform: rotate(25deg) scale(1.1);
+    background: var(--lilac);
+    color: white;
+    border-color: var(--lilac);
+    box-shadow: 0 4px 15px rgba(184, 162, 208, 0.3);
+}
