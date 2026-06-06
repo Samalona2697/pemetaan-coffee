@@ -2,6 +2,6 @@
   "$schema": "https://railway.com/railway.schema.json",
   "deploy": {
     "startCommand": "php artisan serve --host=0.0.0.0 --port=$PORT",
-    "preDeployCommand": "pg_restore --no-owner --no-privileges -d $DATABASE_URL pemetaan_coffee.sql || true"
+    "preDeployCommand": "php artisan migrate --force && pg_restore --no-owner --no-privileges --data-only -d $DATABASE_URL pemetaan_coffee.sql || true"
   }
 }
