@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 class MapController extends Controller
 {
     public function index()
@@ -27,7 +24,6 @@ class MapController extends Controller
                 lng
             FROM kopken_points
         ");
-
         $fore = DB::select("
             SELECT 
                 nama_outlet as nama,
@@ -46,7 +42,6 @@ class MapController extends Controller
                 lng
             FROM fore_points
         ");
-
         return view('map', compact('kopikenangan', 'fore'));
     }
 
@@ -71,14 +66,15 @@ class MapController extends Controller
                 gambar,
                 lat,
                 lng,
-                ST_Distance(
-                    geom::geography,
-                    ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography
-                ) as jarak
+                (6371000 * acos(
+                    cos(radians(?)) * cos(radians(lat)) *
+                    cos(radians(lng) - radians(?)) +
+                    sin(radians(?)) * sin(radians(lat))
+                )) as jarak
             FROM kopken_points
             ORDER BY jarak ASC
             LIMIT 10
-        ", [$lng, $lat]);
+        ", [$lat, $lng, $lat]);
 
         $fore = DB::select("
             SELECT 
@@ -96,14 +92,15 @@ class MapController extends Controller
                 gambar,
                 lat,
                 lng,
-                ST_Distance(
-                    geom::geography,
-                    ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography
-                ) as jarak
+                (6371000 * acos(
+                    cos(radians(?)) * cos(radians(lat)) *
+                    cos(radians(lng) - radians(?)) +
+                    sin(radians(?)) * sin(radians(lat))
+                )) as jarak
             FROM fore_points
             ORDER BY jarak ASC
             LIMIT 10
-        ", [$lng, $lat]);
+        ", [$lat, $lng, $lat]);
 
         return response()->json([
             'kopken' => $kopken,
