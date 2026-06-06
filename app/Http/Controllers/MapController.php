@@ -23,8 +23,8 @@ class MapController extends Controller
                 jam_tutup,
                 rating,
                 gambar,
-                ST_Y(geom) as lat,
-                ST_X(geom) as lng
+                lat,
+                lng
             FROM kopken_points
         ");
 
@@ -42,8 +42,8 @@ class MapController extends Controller
                 jam_tutup,
                 rating,
                 gambar,
-                ST_Y(geom) as lat,
-                ST_X(geom) as lng
+                lat,
+                lng
             FROM fore_points
         ");
 
@@ -69,8 +69,8 @@ class MapController extends Controller
                 jam_tutup,
                 rating,
                 gambar,
-                ST_Y(geom) as lat,
-                ST_X(geom) as lng,
+                lat,
+                lng,
                 ST_Distance(
                     geom::geography,
                     ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography
@@ -94,8 +94,8 @@ class MapController extends Controller
                 jam_tutup,
                 rating,
                 gambar,
-                ST_Y(geom) as lat,
-                ST_X(geom) as lng,
+                lat,
+                lng,
                 ST_Distance(
                     geom::geography,
                     ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography
