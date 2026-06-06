@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,15 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kopken_points', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
-            $table->decimal('rating', 3, 1)->nullable();
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
+        // Enable PostGIS extension if not already enabled
+        DB::statement('CREATE EXTENSION IF NOT EXISTS postgis');
+
+        DB::statement('DROP TABLE IF EXISTS kopken_points');
+
+        DB::statement('
+            CREATE TABLE kopken_points (
+                id          SERIAL PRIMARY KEY,
+                nama_outlet VARCHAR(255),
+                alamat      TEXT,
+                kecamatan   VARCHAR(255),
+                kelurahan   VARCHAR(255),
+                tipe_outlet VARCHAR(255),
+                dine_in     BOOLEAN,
+                takeaway    BOOLEAN,
+                delivery    BOOLEAN,
+                jam_buka    VARCHAR(50),
+                jam_tutup   VARCHAR(50),
+                rating      NUMERIC(3,1),
+                gambar      VARCHAR(255),
+                geom        GEOMETRY(Point, 4326)
+            )
+        ');
     }
 
     /**
